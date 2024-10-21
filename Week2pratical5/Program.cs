@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Globalization;
+using System.Text;
 
 Main();
 
@@ -19,50 +20,84 @@ static void Menu()
 }
 static void GetMenu()
 {
-    int choice = Convert.ToInt32(Console.ReadLine());
-    if (choice == 0)
+    try
     {
-        Environment.Exit(0);
+        int choice = Convert.ToInt32(Console.ReadLine());
+        if (choice == 0)
+        {
+            Environment.Exit(0);
+        }
+
+        if (choice == 1)
+        {
+            Console.WriteLine("Enter a string:");
+            string str = Console.ReadLine();
+
+            Console.WriteLine("Enter no of rotation:");
+            int noOfrotation = Convert.ToInt32(Console.ReadLine());
+
+
+            string encrypt = (Encrypt(str, noOfrotation));
+            Console.WriteLine($"The sentence you inputted is :,{str}");
+            Console.WriteLine($"the encrypted sentence is now :,{encrypt}");
+
+
+        }
+
+        if (choice == 2)
+        {
+            Console.WriteLine("Enter a string:");
+            string str = Console.ReadLine();
+
+            Console.WriteLine("Enter no of rotation");
+            int noOfrotation = Convert.ToInt32(Console.ReadLine());
+
+            string decrypt = Decrypt(str, noOfrotation);
+
+            Console.WriteLine($"The sentence is,{str}");
+            Console.WriteLine($"The decrypted sentence is , {decrypt}");
+        }
     }
-    if (choice == 1)
+
+    catch (Exception ex)
     {
-        Console.WriteLine("Enter a string:");
-        string str = Console.ReadLine();
-
-        Console.WriteLine("Enter no of rotation:");
-        int noOfrotation = Convert.ToInt32(Console.ReadLine());
-
-
-        string encrypt = (Encrypt(str, noOfrotation));
-        Console.WriteLine($"The sentence you inputted is :,{str}");
-        Console.WriteLine($"the encrypted sentence is now :,{encrypt}");
-
-
-    }
-
-    if (choice == 2)
-    {
-        Console.WriteLine("Enter a string:");
-        string str = Console.ReadLine();
-
-        Console.WriteLine("Enter no of rotation");
-        int noOfrotation = Convert.ToInt32(Console.ReadLine());
-
-        string decrypt = Decrypt(str, noOfrotation);
-
-        Console.WriteLine($"The sentence is,{str}");
-        Console.WriteLine($"The decrypted sentence is , {decrypt}");
+        Console.WriteLine($"Error. {ex.Message}");
     }
 }
 static string Encrypt(string ToEncrpy, int Rotation)
 {
     string encodedText = " ";
     foreach (char c in ToEncrpy)
+
     {
-        int encodedChar = c + Rotation;
+        if (!char.IsLetter(c))
+        {
+            encodedText += c;
+        }
+        else
+        {
+            int encodedChar = c + Rotation;
 
-        encodedText += (char)encodedChar;
+            if (char.IsLower(c))
+            {
+                if (encodedChar > 'z')
+                {
+                    encodedChar -= 26;
 
+                }
+
+                else if (char.IsUpper(c))
+                {
+                    if (encodedChar > 'Z')
+                    {
+                        encodedChar -= 26;
+                    }
+                }
+            }
+
+            encodedText += (char)encodedChar;
+
+        }
     }
 
     return encodedText;
@@ -70,15 +105,40 @@ static string Encrypt(string ToEncrpy, int Rotation)
 }
 static string Decrypt(string line, int Rotation)
 {
-    string decdedText = " ";
+    string decodedText = " ";
 
     foreach (char c in line)
+
     {
-        int decoded = c - Rotation;
-        decdedText += (char)decoded;
+        if (!char.IsLetter(c))
+        {
+            decodedText += c;
+        }
+        else { 
+            int decodedChar = c - Rotation;
+            if (char.IsLower(c))
+            {
+
+
+                if (decodedChar < 'a')  
+                {
+                    decodedChar += 26;
+                }
+            else if (char.IsUpper(c))
+                {
+                    if (decodedChar < 'A')
+                    {
+                        decodedChar += 26;
+                    }
+                }
+            }
+            decodedText += (char)decodedChar;
+        }
+       
+        
 
     }
-    return decdedText;
+    return decodedText;
 }
 
 
